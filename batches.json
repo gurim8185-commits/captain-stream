@@ -1,0 +1,70 @@
+[
+  {
+    "id": "prayas-jee",
+    "name": "Prayas JEE (Dropper)",
+    "subjects": [
+      {
+        "id": "phy",
+        "name": "Physics",
+        "chapters": [
+          {
+            "id": "kinematics",
+            "name": "Kinematics 1D & 2D",
+            "lectures": [
+              {
+                "id": "lec-1",
+                "title": "Lec 01 : Vectors & Basic Calculus",
+                "streamUrl": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+              },
+              {
+                "id": "lec-2",
+                "title": "Lec 02 : Motion in a Straight Line",
+                "streamUrl": "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "math",
+        "name": "Mathematics",
+        "chapters": [
+          {
+            "id": "functions",
+            "name": "Functions & Relations",
+            "lectures": [
+              {
+                "id": "lec-1",
+                "title": "Lec 01 : Domain and Range",
+                "streamUrl": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lakshya-jee",
+    "name": "Lakshya JEE (Class 12)",
+    "subjects": [
+      {
+        "id": "chem",
+        "name": "Chemistry",
+        "chapters": [
+          {
+            "id": "solutions",
+            "name": "Solutions & Colligative Properties",
+            "lectures": [
+              {
+                "id": "lec-1",
+                "title": "Lec 01 : Raoult's Law & Henry's Law",
+                "streamUrl": "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

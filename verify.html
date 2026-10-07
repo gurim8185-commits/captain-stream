@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPTAINxPW | Verification Success</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #090d16; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .card { background: #111827; border: 1px solid #1f2937; padding: 30px; border-radius: 12px; text-align: center; max-width: 450px; width: 90%; }
+        h2 { color: #10b981; margin-bottom: 10px; }
+        p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+        .key-box { background: #0f172a; border: 1px solid #334155; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 13px; word-break: break-all; color: #38bdf8; margin-bottom: 15px; }
+        button { background: #38bdf8; color: #090d16; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Access Verified!</h2>
+    <p>Aapki 24-Hour temporary stream key ready hai. Isko copy karke player me paste karein:</p>
+    
+    <div class="key-box" id="keyText">Loading key...</div>
+    <button onclick="copyKey()">Copy Key</button>
+</div>
+
+<script>
+    // URL parameter se token nikalna
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token) {
+        document.getElementById('keyText').innerText = token;
+    } else {
+        document.getElementById('keyText').innerText = "Invalid verification request!";
+    }
+
+    function copyKey() {
+        const text = document.getElementById('keyText').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Key copied to clipboard!");
+    }
+</script>
+
+</body>
+</html>

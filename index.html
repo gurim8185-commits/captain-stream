@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAPTAINxPW | Learning Engine</title>
+    <!-- Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- HLS Video Engine -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        :root {
+            --bg-base: #06080d;
+            --bg-surface: #0a0e17;
+            --bg-card: #0d121c;
+            --border-subtle: #161e2e;
+            --cyan-primary: #00d2fc;
+            --cyan-glow: rgba(0, 210, 252, 0.25);
+            --accent-pink: #f43f5e;
+            --live-red: #ef4444;
+            --text-title: #ffffff;
+            --text-body: #8a99ad;
+            --telegram-color: #0088cc;
+            --whatsapp-color: #25d366;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-base); color: var(--text-title); min-height: 100vh; overflow-x: hidden; }
+
+        /* Top Navbar */
+        .navbar {
+            background: rgba(10, 14, 23, 0.95);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-left { display: flex; align-items: center; gap: 32px; }
+        .brand-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; user-select: none; }
+        .logo-symbol { width: 34px; height: 34px; filter: drop-shadow(0 0 10px rgba(0, 210, 252, 0.5)); }
+        .brand-name { font-size: 20px; font-weight: 900; letter-spacing: 0.5px; color: #fff; }
+        .brand-name .accent-c { color: var(--cyan-primary); }
+        .brand-name .accent-cross { font-size: 14px; margin: 0 2px; color: var(--accent-pink); }
+
+        .nav-items { display: flex; align-items: center; gap: 16px; list-style: none; }
+        .nav-item {
+            color: var(--text-body);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .nav-item:hover, .nav-item.active { color: #fff; background: rgba(0, 210, 252, 0.08); }
+
+        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .channel-btn {
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: #fff;
+            transition: 0.2s;
+        }
+        .btn-tg { background: var(--telegram-color); }
+        .btn-wa { background: var(--whatsapp-color); }
+
+        /* Container Views */
+        .content-area { max-width: 1440px; margin: 24px auto; padding: 0 32px; }
+
+        /* ================= 1. BATCHES DASHBOARD VIEW ================= */
+        #dashboardView { display: block; }
+
+        .stats-banner {
+            background: #090e17;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+        .stats-left { display: flex; align-items: center; gap: 16px; }
+        .stats-icon-box {
+            background: #0f1624;
+            color: var(--cyan-primary);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+        .stats-labels h4 { font-size: 12px; color: var(--text-body); font-weight: 500; }
+        .stats-counts { display: flex; gap: 18px; font-size: 14px; font-weight: 700; margin-top: 4px; }
+        .stats-counts span i { color: var(--cyan-primary); margin-right: 6px; }
+
+        .section-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+        .section-bar h2 { font-size: 24px; font-weight: 800; }
+        .sharing-toolbox { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-body); }
+        .share-pill { color: var(--text-body); font-size: 16px; text-decoration: none; cursor: pointer; transition: 0.2s; }
+        .share-pill:hover { color: #fff; }
+
+        .filters-container { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .filter-tab {
+            background: #090e17;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-body);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-tab.active { background: #121a2b; color: #fff; border-color: #22304d; }
+        .filter-tab .badge {
+            background: var(--cyan-primary);
+            color: #000;
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 10px;
+            margin-left: 6px;
+            font-weight: 900;
+        }
+
+        .search-wrapper { position: relative; margin-bottom: 26px; }
+        .search-wrapper i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-body); }
+        .search-wrapper input {
+            width: 100%;
+            background: #090e17;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 14px 16px 14px 48px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .search-wrapper input:focus { border-color: var(--cyan-primary); box-shadow: 0 0 12px var(--cyan-glow); }
+
+        .batches-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        @media (max-width: 1200px) { .batches-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 900px) { .batches-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .batches-grid { grid-template-columns: 1fr; } }
+
+        .batch-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .batch-card:hover { transform: translateY(-4px); border-color: #22304d; }
+        .batch-banner { position: relative; width: 100%; padding-top: 52%; background: #111726; overflow: hidden; }
+        .batch-banner img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .batch-content { padding: 16px; display: flex; flex-direction: column; flex: 1; }
+        .batch-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .batch-tagline { font-size: 12px; color: var(--text-body); display: flex; align-items: center; gap: 6px; margin-bottom: 16px; }
+
+        .btn-card-action {
+            margin-top: auto;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: none;
+        }
+        .btn-cyan { background: var(--cyan-primary); color: #000; }
+        .btn-unenroll { background: rgba(244, 63, 94, 0.1); color: var(--accent-pink); border: 1px solid rgba(244, 63, 94, 0.3); }
+
+        /* ================= 2. SUBJECTS VIEW ================= */
+        #subjectsView { display: none; }
+
+        .view-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .header-title-box h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+        .enrolled-badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 210, 252, 0.1);
+            border: 1px solid rgba(0, 210, 252, 0.25);
+            color: var(--cyan-primary);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        .header-action-group { display: flex; align-items: center; gap: 10px; }
+        .btn-action-icon {
+            background: #0d121c;
+            border: 1px solid var(--border-subtle);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-action-unenroll {
+            background: rgba(244, 63, 94, 0.08);
+            border: 1px solid rgba(244, 63, 94, 0.25);
+            color: var(--accent-pink);
+        }
+
+        /* Today Classes Slider */
+        .classes-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .classes-header h3 { font-size: 16px; font-weight: 800; }
+        .live-tag {
+            background: var(--live-red);
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .classes-count { font-size: 12px; color: var(--text-body); }
+
+        .classes-slider {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(190px, 1fr);
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 16px;
+            margin-bottom: 30px;
+        }
+        .classes-slider::-webkit-scrollbar { height: 6px; }
+        .classes-slider::-webkit-scrollbar-thumb { background: #1a2333; border-radius: 4px; }
+
+        .class-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            position: relative;
+        }
+        .class-card.is-live {
+            border-color: rgba(239, 68, 68, 0.6);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
+        }
+        .class-icon-box {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .icon-blue { background: #e0f2fe; color: #0284c7; }
+        .icon-purple { background: #f3e8ff; color: #9333ea; }
+        .icon-green { background: #dcfce7; color: #16a34a; }
+
+        .class-meta-top { font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .class-status-badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .badge-ended { background: #161e2e; color: var(--text-body); }
+        .badge-live { background: var(--live-red); color: #fff; }
+        .badge-soon { background: #0369a1; color: #fff; }
+
+        .class-topic-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        .class-time { font-size: 10px; color: var(--text-body); }
+
+        /* Subtabs: Subjects vs Tests */
+        .subnav-tabs {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 12px;
+            margin-bottom: 24px;
+        }
+        .subnav-tab {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-body);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .subnav-tab.active { color: var(--cyan-primary); border-bottom: 2px solid var(--cyan-primary); padding-bottom: 10px; margin-bottom: -12px; }
+
+        /* Subjects Grid */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 1024px) { .subjects-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) { .subjects-grid { grid-template-columns: 1fr; } }
+
+        .subject-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .subject-card:hover { border-color: #2b3952; background: #101726; }
+        .subject-card-top { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .subject-icon-avatar {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            background: #111a2c;
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: var(--cyan-primary);
+        }
+        .subject-card-details h4 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .subject-card-details p { font-size: 12px; color: var(--text-body); }
+
+        .subject-meta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #090e17;
+            border: 1px solid var(--border-subtle);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-body);
+            width: fit-content;
+            margin-bottom: 16px;
+        }
+
+        /* Upgraded Add to Library Button */
+        .btn-add-library {
+            margin-top: auto;
+            background: rgba(0, 210, 252, 0.08);
+            border: 1px solid rgba(0, 210, 252, 0.2);
+            color: var(--cyan-primary);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .btn-add-library:hover {
+            background: var(--cyan-primary);
+            color: #000;
+            box-shadow: 0 0 12px var(--cyan-glow);
+        }
+        .btn-add-library.added {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+
+        /* ================= 3. MY LIBRARY VIEW ================= */
+        #libraryView { display: none; }
+        .library-empty-box {
+            text-align: center;
+            padding: 70px 20px;
+            color: var(--text-body);
+        }
+        .library-empty-box i { font-size: 48px; color: #1e2842; margin-bottom: 16px; }
+
+        /* Player & Key Modal */
+        .player-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .player-dialog {
+            background: #0d121c;
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .dialog-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .video-box { position: relative; padding-top: 56.25%; background: #000; }
+        video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .dialog-body { padding: 20px 24px; }
+        .stream-controls { display: flex; gap: 10px; margin-top: 14px; }
+        .stream-controls input {
+            flex: 1;
+            background: #06080d;
+            border: 1px solid var(--border-subtle);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+        .stream-controls input:focus { border-color: var(--cyan-primary); }
+        .btn-start-stream {
+            background: var(--cyan-primary);
+            color: #000;
+            font-weight: 800;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn-fetch-key {
+            background: #141c2c;
+            border: 1px solid var(--border-subtle);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="#" class="brand-logo" onclick="showDashboardView()">
+            <div class="logo-symbol">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                    <path d="M50 4 L88 20 L84 62 L50 96 L16 62 L12 20 Z" fill="#0c101d" stroke="#00d2fc" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M30 36 L50 50 L70 36" stroke="#00d2fc" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="50" cy="74" r="5" fill="#f43f5e"/>
+                </svg>
+            </div>
+            <div class="brand-name">
+                <span class="accent-c">CAPTAIN</span><span class="accent-cross">✕</span><span>PW</span>
+            </div>
+        </a>
+
+        <ul class="nav-items">
+            <li class="nav-item active" id="navHome" onclick="showDashboardView()"><i class="fa-solid fa-house"></i> Home</li>
+            <li class="nav-item" id="navLibrary" onclick="showLibraryView()"><i class="fa-solid fa-book-bookmark"></i> Library</li>
+            <li class="nav-item"><i class="fa-solid fa-chart-column"></i> Dashboard</li>
+            <li class="nav-item"><i class="fa-solid fa-brain"></i> Revision</li>
+        </ul>
+    </div>
+    <div class="nav-right">
+        <a href="https://t.me/captainxpw" target="_blank" class="channel-btn btn-tg">
+            <i class="fa-brands fa-telegram"></i> Telegram
+        </a>
+        <a href="https://whatsapp.com/channel/0029Vb9fKpvBFLgcpab9ce0A" target="_blank" class="channel-btn btn-wa">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </a>
+    </div>
+</nav>
+
+<div class="content-area">
+
+    <!-- ================= 1. BATCHES DASHBOARD VIEW ================= -->
+    <div id="dashboardView">
+        <div class="stats-banner">
+            <div class="stats-left">
+                <div class="stats-icon-box"><i class="fa-solid fa-chart-simple"></i></div>
+                <div class="stats-labels">
+                    <h4>Your Progress</h4>
+                    <div class="stats-counts">
+                        <span><i class="fa-solid fa-play"></i> 2 lectures</span>
+                        <span><i class="fa-solid fa-file-lines"></i> 0 DPPs</span>
+                    </div>
+                </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color: var(--text-body);"></i>
+        </div>
+
+        <div class="section-bar">
+            <h2>My Batches</h2>
+            <div class="sharing-toolbox">
+                <span>Share:</span>
+                <a href="https://api.whatsapp.com/send?text=Study%20on%20CAPTAINxPW" target="_blank" class="share-pill"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="https://t.me/share/url?url=https://captain-stream.onrender.com" target="_blank" class="share-pill"><i class="fa-brands fa-telegram"></i></a>
+                <span class="share-pill" onclick="navigator.clipboard.writeText(window.location.href); alert('Copied!');"><i class="fa-regular fa-copy"></i></span>
+            </div>
+        </div>
+
+        <div class="filters-container">
+            <button class="filter-tab active" id="tabAllBatches" onclick="switchTab('all')">
+                All Batches (<span id="totalBatchCount">0</span>)
+            </button>
+            <button class="filter-tab" id="tabMyBatches" onclick="switchTab('my')">
+                My Batches <span class="badge" id="myBatchBadge">0</span>
+            </button>
+        </div>
+
+        <div class="search-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search batches or teachers..." onkeyup="renderBatches()">
+        </div>
+
+        <div class="batches-grid" id="batchesGrid"></div>
+    </div>
+
+    <!-- ================= 2. SUBJECTS VIEW ================= -->
+    <div id="subjectsView">
+        <div class="view-header">
+            <div class="header-title-box">
+                <h1 id="subjectBatchTitle">Prayas JEE 2027</h1>
+                <div class="enrolled-badge-pill">
+                    <i class="fa-regular fa-circle-check"></i> Enrolled in this batch
+                </div>
+            </div>
+            <div class="header-action-group">
+                <button class="btn-action-icon btn-action-unenroll" onclick="unenrollCurrentBatch()">
+                    <i class="fa-solid fa-xmark"></i> Unenroll
+                </button>
+                <button class="btn-action-icon">
+                    <i class="fa-regular fa-calendar-days"></i> Calendar
+                </button>
+                <button class="btn-action-icon" onclick="navigator.clipboard.writeText(window.location.href); alert('Link Copied!');">
+                    <i class="fa-solid fa-share-nodes"></i> Share
+                </button>
+            </div>
+        </div>
+
+        <!-- Today Classes Slider -->
+        <div class="classes-header">
+            <h3>Today Classes</h3>
+            <span class="live-tag"><i class="fa-solid fa-tower-broadcast"></i> 1 Live</span>
+            <span class="classes-count">7 classes</span>
+        </div>
+
+        <div class="classes-slider">
+            <div class="class-card">
+                <div class="class-icon-box icon-blue"><i class="fa-solid fa-bolt"></i></div>
+                <div class="class-meta-top">Physics By Rahul Yadav Sir</div>
+                <span class="class-status-badge badge-ended"><i class="fa-regular fa-clock"></i> Ended</span>
+                <div class="class-topic-title">Mechanical Properties of Fluids : Homework...</div>
+                <div class="class-time"><i class="fa-regular fa-clock"></i> 08:00 am - 08:00 am</div>
+            </div>
+
+            <div class="class-card">
+                <div class="class-icon-box icon-purple"><i class="fa-solid fa-calculator"></i></div>
+                <div class="class-meta-top">Maths by Pradeep Verma Sir</div>
+                <span class="class-status-badge badge-ended"><i class="fa-regular fa-clock"></i> Ended</span>
+                <div class="class-topic-title">Relations and Functions 02 : Polynomial function ||...</div>
+                <div class="class-time"><i class="fa-regular fa-clock"></i> 08:15 am - 10:32 am</div>
+            </div>
+
+            <div class="class-card">
+                <div class="class-icon-box icon-purple"><i class="fa-solid fa-calculator"></i></div>
+                <div class="class-meta-top">Maths by Tarun Khandelwal Sir</div>
+                <span class="class-status-badge badge-ended"><i class="fa-regular fa-clock"></i> Ended</span>
+                <div class="class-topic-title">Matrices 01 : Matrices-Introduction || Matrix...</div>
+                <div class="class-time"><i class="fa-regular fa-clock"></i> 08:45 am - 10:50 am</div>
+            </div>
+
+            <div class="class-card">
+                <div class="class-icon-box icon-green"><i class="fa-solid fa-flask"></i></div>
+                <div class="class-meta-top">Organic Chem by Faisal Razaq</div>
+                <span class="class-status-badge badge-ended"><i class="fa-regular fa-clock"></i> Ended</span>
+                <div class="class-topic-title">Class Cancelled: Due to technical issue</div>
+                <div class="class-time"><i class="fa-regular fa-clock"></i> 10:45 am - 10:45 am</div>
+            </div>
+
+            <div class="class-card is-live">
+                <div class="class-icon-box icon-blue"><i class="fa-solid fa-bolt"></i></div>
+                <div class="class-meta-top">Physics By Rahul Yadav Sir</div>
+                <span class="class-status-badge badge-live"><i class="fa-solid fa-circle-dot"></i> Live</span>
+                <div class="class-topic-title">Oscillations 01 : Introduction || No DPP || Reschedule...</div>
+                <div class="class-time"><i class="fa-regular fa-clock"></i> 11:05 am - 02:00 pm</div>
+            </div>
+
+            <div class="class-card">
+                <div class="class-icon-box icon-blue"><i class="fa-solid fa-bolt"></i></div>
+                <div class="class-meta-top">Physics by Manish Singh Tak Sir</div>
+                <span class="class-status-badge badge-soon"><i class="fa-regular fa-clock"></i> Soon</span>
+                <div class="class-topic-title">Oscillations 05 : Dynamics of shm</div>
+                <div class="class-time"><i class="fa-regular fa-clock"></i> 01:30 pm - 04:30 pm</div>
+            </div>
+        </div>
+
+        <div class="subnav-tabs">
+            <div class="subnav-tab active"><i class="fa-solid fa-book-open"></i> Subjects</div>
+            <div class="subnav-tab"><i class="fa-solid fa-clipboard-check"></i> Tests</div>
+        </div>
+
+        <div class="subjects-grid" id="subjectsGrid"></div>
+    </div>
+
+    <!-- ================= 3. MY LIBRARY VIEW ================= -->
+    <div id="libraryView">
+        <div class="section-bar">
+            <h2>My Saved Library</h2>
+            <span style="font-size: 13px; color: var(--text-body);">Aapke bookmark kiye huye subjects aur lectures</span>
+        </div>
+        <div class="subjects-grid" id="libraryGrid"></div>
+    </div>
+
+</div>
+
+<!-- Player Modal -->
+<div class="player-modal" id="playerModal">
+    <div class="player-dialog">
+        <div class="dialog-header">
+            <h3 id="modalBatchTitle" style="font-size: 16px;">Lecture Streamer</h3>
+            <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 20px;" onclick="closeModal()"></i>
+        </div>
+        <div class="video-box">
+            <video id="videoPlayer" controls poster="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop"></video>
+        </div>
+        <div class="dialog-body">
+            <div style="font-size: 15px; font-weight: 700;" id="modalLectureTitle">Select a lecture</div>
+            <div style="margin-top: 14px;">
+                <select id="modalLectureSelect" style="width: 100%; padding: 12px; background: #06080d; border: 1px solid var(--border-subtle); color: #fff; border-radius: 8px;"></select>
+            </div>
+            <div class="stream-controls">
+                <input type="text" id="accessKeyInput" placeholder="Paste 24h Access Key here...">
+                <button class="btn-start-stream" onclick="streamActiveLecture()">Stream Lecture</button>
+                <button class="btn-fetch-key" onclick="generateKey()">Get Key (Ads)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const serverUrl = window.location.origin;
+    let allBatches = [];
+    let currentFilter = 'all';
+    let currentOpenedBatch = null;
+    let enrolledBatchIds = JSON.parse(localStorage.getItem('enrolled_batches')) || [];
+    let savedLibrary = JSON.parse(localStorage.getItem('saved_library')) || [];
+
+    window.onload = async () => {
+        const savedKey = localStorage.getItem('captain_key');
+        if (savedKey) {
+            document.getElementById('accessKeyInput').value = savedKey;
+        }
+
+        try {
+            const res = await fetch(`${serverUrl}/api/batches`);
+            allBatches = await res.json();
+            updateCounts();
+            renderBatches();
+        } catch(e) {
+            console.error("Backend offline:", e);
+        }
+    };
+
+    function updateCounts() {
+        document.getElementById('totalBatchCount').innerText = allBatches.length;
+        document.getElementById('myBatchBadge').innerText = enrolledBatchIds.length;
+    }
+
+    function switchTab(filterType) {
+        currentFilter = filterType;
+        document.getElementById('tabAllBatches').classList.toggle('active', filterType === 'all');
+        document.getElementById('tabMyBatches').classList.toggle('active', filterType === 'my');
+        renderBatches();
+    }
+
+    function showDashboardView() {
+        document.getElementById('dashboardView').style.display = 'block';
+        document.getElementById('subjectsView').style.display = 'none';
+        document.getElementById('libraryView').style.display = 'none';
+        document.getElementById('navHome').classList.add('active');
+        document.getElementById('navLibrary').classList.remove('active');
+    }
+
+    function showLibraryView() {
+        document.getElementById('dashboardView').style.display = 'none';
+        document.getElementById('subjectsView').style.display = 'none';
+        document.getElementById('libraryView').style.display = 'block';
+        document.getElementById('navHome').classList.remove('active');
+        document.getElementById('navLibrary').classList.add('active');
+        renderLibraryGrid();
+    }
+
+    function openBatchSubjects(batchId) {
+        currentOpenedBatch = allBatches.find(b => b.id === batchId);
+        if (!currentOpenedBatch) return;
+
+        if (!enrolledBatchIds.includes(batchId)) {
+            enrolledBatchIds.push(batchId);
+            localStorage.setItem('enrolled_batches', JSON.stringify(enrolledBatchIds));
+            updateCounts();
+        }
+
+        document.getElementById('subjectBatchTitle').innerText = currentOpenedBatch.name;
+        document.getElementById('dashboardView').style.display = 'none';
+        document.getElementById('libraryView').style.display = 'none';
+        document.getElementById('subjectsView').style.display = 'block';
+
+        renderSubjectCards();
+    }
+
+    function unenrollCurrentBatch() {
+        if (!currentOpenedBatch) return;
+        enrolledBatchIds = enrolledBatchIds.filter(id => id !== currentOpenedBatch.id);
+        localStorage.setItem('enrolled_batches', JSON.stringify(enrolledBatchIds));
+        updateCounts();
+        alert(`${currentOpenedBatch.name} unenroll ho gaya!`);
+        showDashboardView();
+        renderBatches();
+    }
+
+    // TOGGLE SAVE TO LIBRARY
+    function toggleLibraryItem(subjectObj, event) {
+        event.stopPropagation();
+        const exists = savedLibrary.some(item => item.id === subjectObj.id);
+        
+        if (exists) {
+            savedLibrary = savedLibrary.filter(item => item.id !== subjectObj.id);
+        } else {
+            savedLibrary.push({
+                ...subjectObj,
+                batchName: currentOpenedBatch ? currentOpenedBatch.name : 'CAPTAINxPW'
+            });
+        }
+        localStorage.setItem('saved_library', JSON.stringify(savedLibrary));
+        renderSubjectCards();
+        if (document.getElementById('libraryView').style.display === 'block') {
+            renderLibraryGrid();
+        }
+    }
+
+    function renderSubjectCards() {
+        const grid = document.getElementById('subjectsGrid');
+        
+        const subjects = (currentOpenedBatch.subjects && currentOpenedBatch.subjects.length > 0) 
+            ? currentOpenedBatch.subjects 
+            : [
+                { id: "notices", name: "Notices", teacher: "Captain Announcement", count: "22 Lectures", icon: "fa-bullhorn" },
+                { id: "maths-tk", name: "Maths by Tarun Khandelwal Sir", teacher: "Tarun Khandelwal Sir", count: "115 Lectures", icon: "fa-calculator" },
+                { id: "physics-ry", name: "Physics By Rahul Yadav Sir", teacher: "Rahul Yadav Sir", count: "139 Lectures", icon: "fa-chalkboard-user" },
+                { id: "chem-rd", name: "Physical Chemistry By Rahul Dudi Sir", teacher: "Rahul Dudi Sir", count: "76 Lectures", icon: "fa-flask-vial" },
+                { id: "inorg-kp", name: "Inorganic Chemistry By Kunwar Om ...", teacher: "Kunwar Om Pandey Sir", count: "34 Lectures", icon: "fa-dna" },
+                { id: "org-ra", name: "Organic Chemistry By Rohit Agarwal...", teacher: "Rohit Agarwal Sir", count: "0 Lectures", icon: "fa-atom" },
+                { id: "phy-mst", name: "Physics By Manish Singh Tak Sir", teacher: "Manish Singh Tak Sir", count: "128 Lectures", icon: "fa-bolt" },
+                { id: "maths-pv", name: "Maths by Pradeep Verma Sir", teacher: "Pradeep Verma Sir", count: "93 Lectures", icon: "fa-square-root-variable" },
+                { id: "chem-am", name: "Physical Chemistry By Amit Mahajan...", teacher: "Amit Mahajan Sir", count: "87 Lectures", icon: "fa-cubes" }
+            ];
+
+        grid.innerHTML = subjects.map(s => {
+            const isSaved = savedLibrary.some(item => item.id === s.id);
+            return `
+                <div class="subject-card" onclick="openPlayerModal('${s.id}')">
+                    <div class="subject-card-top">
+                        <div class="subject-icon-avatar">
+                            <i class="fa-solid ${s.icon || 'fa-graduation-cap'}"></i>
+                        </div>
+                        <div class="subject-card-details">
+                            <h4>${s.name}</h4>
+                            <p><i class="fa-regular fa-user"></i> ${s.teacher || 'PW Faculty'}</p>
+                        </div>
+                    </div>
+                    <div class="subject-meta-pill">
+                        <i class="fa-regular fa-circle-play"></i> ${s.count || (s.chapters ? s.chapters.length + ' Chapters' : 'Lectures Available')}
+                    </div>
+                    <button class="btn-add-library ${isSaved ? 'added' : ''}" onclick='toggleLibraryItem(${JSON.stringify(s)}, event)'>
+                        <i class="fa-solid ${isSaved ? 'fa-check' : 'fa-bookmark'}"></i> ${isSaved ? 'Saved in Library' : '+ Add to Library'}
+                    </button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderLibraryGrid() {
+        const grid = document.getElementById('libraryGrid');
+        if (savedLibrary.length === 0) {
+            grid.innerHTML = `
+                <div class="library-empty-box" style="grid-column: 1/-1;">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <h3 style="color:#fff; margin-bottom: 6px;">Aapki Library Khali Hai</h3>
+                    <p style="font-size: 13px;">Kisi bhi batch me jakar subject ke neeche "+ Add to Library" dabayein taaki lectures yahan save ho sakein.</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = savedLibrary.map(s => `
+            <div class="subject-card" onclick="openPlayerModal('${s.id}')">
+                <div class="subject-card-top">
+                    <div class="subject-icon-avatar">
+                        <i class="fa-solid ${s.icon || 'fa-graduation-cap'}"></i>
+                    </div>
+                    <div class="subject-card-details">
+                        <h4>${s.name}</h4>
+                        <p><i class="fa-solid fa-layer-group"></i> ${s.batchName || 'CAPTAINxPW'}</p>
+                    </div>
+                </div>
+                <div class="subject-meta-pill">
+                    <i class="fa-regular fa-circle-play"></i> ${s.count || 'Lectures Ready'}
+                </div>
+                <button class="btn-add-library added" onclick='toggleLibraryItem(${JSON.stringify(s)}, event)'>
+                    <i class="fa-solid fa-trash-can"></i> Remove from Library
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function renderBatches() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const grid = document.getElementById('batchesGrid');
+
+        let displayList = allBatches.filter(b => b.name.toLowerCase().includes(query));
+        if (currentFilter === 'my') {
+            displayList = displayList.filter(b => enrolledBatchIds.includes(b.id));
+        }
+
+        if (displayList.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px 20px; color: var(--text-body);">Koi batch nahi mila!</div>`;
+            return;
+        }
+
+        grid.innerHTML = displayList.map(b => {
+            const isEnrolled = enrolledBatchIds.includes(b.id);
+            return `
+                <div class="batch-card" onclick="openBatchSubjects('${b.id}')">
+                    <div class="batch-banner">
+                        <img src="${b.banner || 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop'}" alt="${b.name}">
+                        ${isEnrolled ? '<div style="position: absolute; top: 10px; right: 10px; background: var(--cyan-primary); color: #000; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 800;"><i class="fa-solid fa-check"></i> Enrolled</div>' : ''}
+                    </div>
+                    <div class="batch-content">
+                        <div class="batch-title">${b.name}</div>
+                        <div class="batch-tagline"><i class="fa-solid fa-graduation-cap"></i> ${b.tagline || 'For JEE/NEET Aspirants'}</div>
+                        <button class="btn-card-action ${isEnrolled ? 'btn-unenroll' : 'btn-cyan'}" onclick="event.stopPropagation(); ${isEnrolled ? `toggleEnroll('${b.id}')` : `openBatchSubjects('${b.id}')`}">
+                            <i class="${isEnrolled ? 'fa-solid fa-check' : 'fa-regular fa-square-plus'}"></i> ${isEnrolled ? 'Enrolled' : 'Enroll'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function toggleEnroll(batchId) {
+        if (enrolledBatchIds.includes(batchId)) {
+            enrolledBatchIds = enrolledBatchIds.filter(id => id !== batchId);
+        } else {
+            enrolledBatchIds.push(batchId);
+        }
+        localStorage.setItem('enrolled_batches', JSON.stringify(enrolledBatchIds));
+        updateCounts();
+        renderBatches();
+    }
+
+    function openPlayerModal(subjectId) {
+        document.getElementById('modalBatchTitle').innerText = "Lecture Streamer";
+        const select = document.getElementById('modalLectureSelect');
+        select.innerHTML = '';
+
+        if (currentOpenedBatch && currentOpenedBatch.subjects && currentOpenedBatch.subjects.length > 0) {
+            currentOpenedBatch.subjects.forEach(subject => {
+                subject.chapters.forEach(chapter => {
+                    chapter.lectures.forEach(lec => {
+                        const opt = document.createElement('option');
+                        opt.value = JSON.stringify({
+                            batchId: currentOpenedBatch.id,
+                            subjectId: subject.id,
+                            chapterId: chapter.id,
+                            lectureId: lec.id,
+                            title: `${subject.name} - ${lec.title}`
+                        });
+                        opt.innerText = `${subject.name} | ${lec.title}`;
+                        select.appendChild(opt);
+                    });
+                });
+            });
+        } else {
+            const opt = document.createElement('option');
+            opt.value = JSON.stringify({
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                title: "Live Stream Lecture"
+            });
+            opt.innerText = "Lecture 01 : Introduction";
+            select.appendChild(opt);
+        }
+
+        document.getElementById('playerModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('playerModal').style.display = 'none';
+        document.getElementById('videoPlayer').pause();
+    }
+
+    async function generateKey() {
+        try {
+            const res = await fetch(`${serverUrl}/api/get-key-link`);
+            const data = await res.json();
+            window.open(data.shortenerUrl, '_blank');
+        } catch (e) {
+            alert("Key link generate nahi ho saka!");
+        }
+    }
+
+    async function streamActiveLecture() {
+        const key = document.getElementById('accessKeyInput').value.trim();
+        if (!key) {
+            alert("Pehle Access Key daalo!");
+            return;
+        }
+
+        const selectedData = JSON.parse(document.getElementById('modalLectureSelect').value);
+        localStorage.setItem('captain_key', key);
+
+        try {
+            let streamUrl = selectedData.streamUrl;
+            let title = selectedData.title;
+
+            if (!streamUrl) {
+                const res = await fetch(`${serverUrl}/api/stream?key=${encodeURIComponent(key)}&batchId=${selectedData.batchId}&subjectId=${selectedData.subjectId}&chapterId=${selectedData.chapterId}&lectureId=${selectedData.lectureId}`);
+                const data = await res.json();
+                if (res.status !== 200) {
+                    alert(data.error);
+                    return;
+                }
+                streamUrl = data.streamUrl;
+                title = data.title;
+            }
+
+            document.getElementById('modalLectureTitle').innerText = title;
+            const video = document.getElementById('videoPlayer');
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+                video.play();
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = streamUrl;
+                video.play();
+            }
+        } catch (e) {
+            alert("Streaming start karne me issue aaya!");
+        }
+    }
+</script>
+
+</body>
+</html>
